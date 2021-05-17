@@ -1,0 +1,45 @@
+- name: Host Prerequisites
+  hosts: zookeeper:kafka_broker:schema_registry
+  become: yes
+  tasks:
+  - import_role:
+      name: confluent.common
+  - import_role:
+      name: confluent.kerberos
+    when: sasl_protocol == "kerberos" and kerberos_configure|bool
+  - import_role:
+      name: confluent.ssl
+    when: ssl_enabled|bool
+
+- name: Zookeeper Provisioning
+  hosts: zookeeper
+  gather_facts: no
+  tags:
+    - zookeeper
+  tasks:
+  - import_role:
+      name: confluent.zookeeper
+
+- name: Kafka Broker Provisioning
+  hosts: kafka_broker
+  gather_facts: no
+  tags:
+    - kafka_broker
+  tasks:
+  - import_role:
+      name: confluent.kafka_broker
+
+- name: Schema Registry Provisioning
+  hosts: schema_registry
+  gather_facts: no
+  tags:
+    - schema_registry
+  tasks:
+  - import_role:
+      name: confluent.schema_registry
+
+
+    - control_center
+  tasks:
+  - import_role:
+      name: confluent.control_center

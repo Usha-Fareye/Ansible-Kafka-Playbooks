@@ -37,9 +37,3 @@
   tasks:
   - import_role:
       name: confluent.schema_registry
-
-
-    - control_center
-  tasks:
-  - import_role:
-      name: confluent.control_center

@@ -13,6 +13,7 @@
 
 - name: Zookeeper Provisioning
   hosts: zookeeper
+  become: yes
   gather_facts: no
   tags:
     - zookeeper
@@ -22,6 +23,7 @@
 
 - name: Kafka Broker Provisioning
   hosts: kafka_broker
+  become: yes
   gather_facts: no
   tags:
     - kafka_broker
@@ -31,6 +33,7 @@
 
 - name: Schema Registry Provisioning
   hosts: schema_registry
+  become: yes
   gather_facts: no
   tags:
     - schema_registry

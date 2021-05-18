@@ -4,4 +4,3 @@
   systemd:
     name: "{{schema_registry.service_name}}"
     state: restarted
-© 2021 GitHub, Inc.

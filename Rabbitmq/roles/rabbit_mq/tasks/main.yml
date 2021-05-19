@@ -1,5 +1,5 @@
 - name: Install nessesary package
-  apt: 
+  yum: 
       name: apt-transport-https
       state: present
       update_cache: yes
@@ -13,7 +13,7 @@
     mode: 0755
 
 - name: Install esl-erlang
-  apt:
+  yum:
     deb: /home/ansadmin/esl-erlang_21.0-1~debian~stretch_amd64.deb
 
 - name: Download erlang solutions
@@ -25,7 +25,7 @@
     mode: 0755
 
 - name: Install erlang repository
-  apt:
+  yum:
     deb: /home/ansadmin/erlang-solutions_1.0_all.deb
 
 - name: Add an Apt signing key

@@ -1,30 +1,37 @@
----
-# Configure RabbitMQ for cluster
-- name: backup old erlang cookie
-  shell: cp -a /var/lib/rabbitmq/.erlang.cookie /var/lib/rabbitmq/.erlang.cookie.old
-  changed_when: false
+- name: Install nessesary package
+  apt: 
+      name: apt-transport-https
+      state: present
+      update_cache: yes
 
-- name: updating rabbitmq erlang cookie
-  template:
-    src: erlang.cookie.j2
-    dest: /var/lib/rabbitmq/.erlang.cookie
-    owner: rabbitmq
-    group: rabbitmq
-    mode: 0400
-  notify:
-    stop rabbitmq-server
+- name: Download esl-erlang package
+  get_url:
+    url: https://packages.erlang-solutions.com/erlang/esl-erlang/FLAVOUR_1_general/esl-erlang_21.0-1~debian~stretch_amd64.deb
+    dest: /home/ansadmin/esl-erlang_21.0-1~debian~stretch_amd64.deb
+    owner: admin
+    group: admin
+    mode: 0755
 
-- meta: flush_handlers
+- name: Install esl-erlang
+  apt:
+    deb: /home/ansadmin/esl-erlang_21.0-1~debian~stretch_amd64.deb
 
-- name: remove old erlang cookie
-  file:
-    path: /var/lib/rabbitmq/.erlang.cookie.old
-    state: absent
-  changed_when: false
+- name: Download erlang solutions
+  get_url:
+    url: https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
+    dest: /home/ansadmin/erlang-solutions_1.0_all.deb
+    owner: admin
+    group: admin
+    mode: 0755
 
-# Setup/install tasks.
-- include: setup-RedHat.yml
-  when: ansible_os_family == 'RedHat'
+- name: Install erlang repository
+  apt:
+    deb: /home/ansadmin/erlang-solutions_1.0_all.deb
+
+- name: Add an Apt signing key
+  apt_key:
+    url: https://packages.erlang-solutions.com/debian/erlang_solutions.asc
+    state: present
 
 - include: setup-Debian.yml
   when: ansible_os_family == 'Debian'

@@ -1,11 +1,3 @@
 ---
-- name: Restart RabbitMQ server
-  service:
-    name: 'rabbitmq-server'
-    state: restarted
-
-- name: Reloaad systemd services and restart RabbitMQ
-  systemd:
-    name: 'rabbitmq-server'
-    state: restarted
-    daemon_reload: yes
+- name: restart rabbitmq
+  service: "name={{ rabbitmq_daemon }} state=restarted"

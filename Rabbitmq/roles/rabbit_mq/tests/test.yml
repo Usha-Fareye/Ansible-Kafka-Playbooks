@@ -5,7 +5,7 @@
   become: True
 
   roles:
-    - role: rabbitmq
+    - role: rabbit_mq
       rabbitmq_plugins:
         - 'rabbitmq_management'
       rabbitmq_tcp_address: '0.0.0.0'

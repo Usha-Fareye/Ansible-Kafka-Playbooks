@@ -1,9 +1,15 @@
----
-- include: packages_redhat.yml
+# Install Packages
+- name: Install the rabbitmq server
+  yum:
+    name: "{{item}}-{{rabbitmq_package_version}}"
+    state: latest
   when: ansible_os_family == "RedHat"
 
-- include: packages_debian.yml
-  when: ansible_os_family == "Debian"
+- name: Install the rabbitmq server
+  yum:
+    name: "{{item}}-{{rabbitmq_package_version}}"
+    state: latest
+  when: ansible_os_family == "RedHat"
 
 - include: configuration.yml
 

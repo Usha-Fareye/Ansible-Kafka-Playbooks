@@ -1,9 +1,0 @@
-- name: Rabbit_mq provisioning
-  hosts: rabbit_mq
-  become: yes
-  gather_facts: no
-  tags:
-    - rabbitmq
-  tasks:
-  - import_role:
-      name: rabbit_mq

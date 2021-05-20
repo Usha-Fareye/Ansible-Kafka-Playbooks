@@ -1,20 +1,39 @@
 ---
 rabbitmq_daemon: rabbitmq-server
 rabbitmq_state: started
-rabbitmq_enabled: yes
+rabbitmq_enabled: true
 
-rabbitmq_version: "{{ '3.7.18' if ansible_distribution_release == 'buster' else '3.6.16' }}"
-rabbitmq_focal_version: "3.8.8"
-rabbitmq_el8_version: "3.8.8"
+rabbitmq_version: "3.8.5"
+erlang_version: "23.0.2"
 
-rabbitmq_rpm: "rabbitmq-server-{{ rabbitmq_version }}-1.el{{ ansible_distribution_major_version }}.noarch.rpm"
-rabbitmq_el8_rpm: "rabbitmq-server-{{ rabbitmq_el8_version }}-1.el{{ ansible_distribution_major_version }}.noarch.rpm"
 rabbitmq_rpm: "rabbitmq-server-{{ rabbitmq_version }}-1.el{{ ansible_distribution_major_version }}.noarch.rpm"
 rabbitmq_rpm_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/el/{{ ansible_distribution_major_version }}/{{ rabbitmq_rpm }}/download"
-rabbitmq_el8_rpm_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/el/{{ ansible_distribution_major_version }}/{{ rabbitmq_el8_rpm }}/download"
-rabbitmq_gpg_key: "https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey"
+
+erlang_rpm: "erlang-{{ erlang_version }}-1.el{{ ansible_distribution_major_version }}.x86_64.rpm"
+erlang_rpm_url: "https://packagecloud.io/rabbitmq/erlang/packages/el/{{ ansible_distribution_major_version }}/{{ erlang_rpm }}/download"
 
 rabbitmq_deb: "rabbitmq-server_{{ rabbitmq_version }}-1_all.deb"
-rabbitmq_focal_deb: "rabbitmq-server_{{ rabbitmq_focal_version }}-1_all.deb"
 rabbitmq_deb_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/{{ ansible_distribution | lower }}/{{ ansible_distribution_release }}/{{ rabbitmq_deb }}/download"
-rabbitmq_focal_deb_url: "https://packagecloud.io/rabbitmq/rabbitmq-server/packages/{{ ansible_distribution | lower }}/bionic/{{ rabbitmq_focal_deb }}/download"
+
+erlang_deb: "erlang-{{ item }}_{{ erlang_version }}-1_amd64.deb"
+erlang_deb_url: "https://bintray.com/rabbitmq-erlang/debian/download_file?file_path=pool%2Ferlang%2F{{ erlang_version }}-1%2F{{ ansible_distribution | lower }}%2F{{ ansible_distribution_release }}%2Ferlang-{{ item }}_{{ erlang_version }}-1_amd64.deb"
+
+# Will be used in loop to install specific packages required by RabbitMQ; ordering of these is very important
+erlang_deb_packages:
+  - base
+  - asn1
+  - crypto
+  - mnesia
+  - public-key
+  - runtime-tools
+  - ssl
+  - eldap
+  - ftp
+  - tftp
+  - inets
+  - snmp
+  - os-mon
+  - parsetools
+  - syntax-tools
+  - tools
+  - xmerl

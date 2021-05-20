@@ -1,42 +1,40 @@
-- name: Download esl-erlang package
-  get_url:
-    url: wget https://packages.erlang-solutions.com/erlang/esl-erlang/FLAVOUR_1_general/esl-erlang_21.0-1~debian~stretch_amd64.deb
-    dest: /home/ansadmin/esl-erlang_21.0-1~debian~stretch_amd64.deb
-    owner: admin
-    group: admin
-    mode: 0755
+---
 
-- name: Install esl-erlang
-  yum:
-    deb: /home/ansadmin/esl-erlang_21.0-1~debian~stretch_amd64.deb
+- name: Configure RabbitMQ
+  template:
+    dest: '/etc/rabbitmq/rabbitmq.config'
+    group: 'rabbitmq'
+    mode: 0644
+    owner: 'rabbitmq'
+    src: 'rabbitmq.config.j2'
+  notify: Restart RabbitMQ server
 
-- name: Download erlang solutions
-  get_url:
-    url: wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
-    dest: /home/ansadmin/erlang-solutions_1.0_all.deb
-    owner: admin
-    group: admin
-    mode: 0755
+- name: RabbitMQ Environment-specific configuration
+  template:
+    dest: '/etc/rabbitmq/rabbitmq-env.conf'
+    group: 'rabbitmq'
+    mode: 0644
+    owner: 'rabbitmq'
+    src: 'rabbitmq-env.conf.j2'
+  notify: Restart RabbitMQ server
+  when: rabbitmq_conf_env is defined
 
-- name: Install erlang repository
-  yum:
-    deb: /home/ansadmin/erlang-solutions_1.0_all.deb
+- name: RabbitMQ set Erlang cookie
+  template:
+    dest: '/var/lib/rabbitmq/.erlang.cookie'
+    group: 'rabbitmq'
+    owner: 'rabbitmq'
+    mode: 0400
+    src: 'erlang.cookie.j2'
+  notify: Restart RabbitMQ server
+  when: rabbitmq_cluster and rabbitmq_erlang_cookie is defined
 
-- name: Add an Apt signing key
-  apt_key:
-    url: https://packages.erlang-solutions.com/debian/erlang_solutions.asc
-    state: present
-    
-- name: Ensure erlang is installed.
-  package:
-    name: erlang
-    state: present
-
-- include: setup-Debian.yml
-  when: ansible_os_family == 'Debian'
-
-- name: Ensure rabbitmq is started and enabled (if configured).
-  service:
-    name: "{{ rabbitmq_daemon }}"
-    state: "{{ rabbitmq_state }}"
-    enabled: "{{ rabbitmq_enabled }}"
+- name: Set up max file-descriptor limits in RabbitMQ systemd service
+  ini_file:
+    dest: /etc/systemd/system/rabbitmq-server.service.d/limits.conf
+    create: yes
+    section: Service
+    option: LimitNOFILE
+    value: '{{ rabbitmq_fd_limit }}'
+  notify: Reloaad systemd services and restart RabbitMQ
+  when: hostvars[inventory_hostname]['ansible_service_mgr'] == 'systemd' and rabbitmq_fd_limit is defined

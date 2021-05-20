@@ -1,28 +1,28 @@
 ---
+dependencies: []
+
 galaxy_info:
   role_name: rabbitmq
-  author: Sergei Steklov
-  description: "RabbitMQ installation for Linux"
-  company: "Ascensio System SIA"
-  license: "GNU AGPL v3.0"
-  min_ansible_version: 2.3
+  author: geerlingguy
+  description: RabbitMQ installation for Linux.
+  company: "Midwestern Mac, LLC"
+  license: "license (BSD, MIT)"
+  min_ansible_version: 2.4
   platforms:
     - name: EL
       versions:
-      - 7
-      - 8
-    - name: Ubuntu
+        - all
+    - name: Fedora
       versions:
-      - xenial
-      - bionic
-      - focal
+        - all
     - name: Debian
       versions:
-      - jessie
-      - stretch
-      - buster
+        - all
+    - name: Ubuntu
+      versions:
+        - all
   galaxy_tags:
-    - application
     - system
-    - queue
     - rabbitmq
+    - queue
+    - rabbit

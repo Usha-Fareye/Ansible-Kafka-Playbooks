@@ -10,6 +10,7 @@ broker.id={{ broker_id | default(groups.kafka_broker.index(inventory_hostname) +
 {% endfor %}
 
 listeners={{kafka_broker_security_protocol}}://:{{kafka_port}}
+advertised.listeners={{sasl_protocol}}://:{{kafka_broker_security_protocol}}://:{{kafka_port}}
 
 security.inter.broker.protocol={{kafka_broker_security_protocol}}
 {% if kafka_broker_ssl_enabled|bool %}

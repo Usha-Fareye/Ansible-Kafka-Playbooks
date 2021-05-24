@@ -30,6 +30,7 @@ erlang_deb_packages:
   - eldap
   - ftp
   - tftp
+  - https
   - inets
   - snmp
   - os-mon

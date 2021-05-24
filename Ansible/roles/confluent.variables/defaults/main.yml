@@ -32,7 +32,7 @@ rbac_enabled: false
 confluent_server_enabled: "{{ true if rbac_enabled|bool else false }}"
 
 # Other options: kerberos, plain
-sasl_protocol: none
+sasl_protocol: plain
 
 ssl_enabled: false
 ssl_mutual_auth_enabled: false
